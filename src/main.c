@@ -15,12 +15,13 @@ int main() {
 	char *str = NULL;
 	
 	// Code
-	str = readFile("../../src/main.c");
-	if(str == NULL)
-		return -1;
+	InitOpenCL();
+	// str = readFile("../../src/main.c");
+	// if(str == NULL)
+	// 	return -1;
 
-	writeFile("try.c", str);
-	free(str);
+	// writeFile("try.c", str);
+	// free(str);
 
 	return 0;
 }
