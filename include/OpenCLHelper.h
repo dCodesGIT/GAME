@@ -12,12 +12,6 @@
 #include "../CL/cl.h"
 #include "FileHelper.h"
 
-// Structure declaration
-typedef struct _KernelArgument {
-	size_t size;
-	void *arg;
-} KernelArgument;
-
 // Function declarations
 /**
  * Initialize OpenCL for program
@@ -32,12 +26,12 @@ cl_kernel *CreateOpenCLKernelFromFile(char *filename, const char *kernelName[], 
 /**
  * Set OpenCL kernel Arguments
  */
-bool SetOpenCLKernelArguments(cl_kernel kernel, KernelArgument *kernelArguments, int nkernelArguments);
+bool SetOpenCLKernelArgumentWithDatablob(cl_kernel kernel, int argumentIndex, size_t dataSize, void *dataBlob, cl_mem *clMemory_write);
 
 /**
  * Run OpenCL kernel 'kernel'
  */
-bool RunOpenCLKernel(cl_kernel kernel, cl_mem *memObjects, cl_uint memObjectCount, cl_uint dims, size_t *GlobalWorkSize, size_t *LocalWorkSize);
+bool RunOpenCLKernel(cl_kernel kernel, int nArrayElements, cl_mem clMemory_write, size_t dataSize, void *dataPtr);
 
 /**
  * Uninitialize OpenCL

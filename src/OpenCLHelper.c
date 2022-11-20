@@ -16,11 +16,10 @@ static cl_command_queue clCommandQueue;
 static cl_program clProgram;
 static cl_kernel *clKernel;
 static int n_clKernels = 0;
+static cl_mem *clMemory = NULL;
+static int n_clMemory = 0;
 
 // Function definition
-/**
- * Initialize OpenCL for program
- */
 bool InitOpenCL() {
 	// Function declarations
 	cl_int GetOpenCLPlatform(cl_platform_id *);
@@ -47,6 +46,7 @@ bool InitOpenCL() {
 	printOpenCLPlatformInfo(clPlatformID);
 	printOpenCLDeviceInfo(clDeviceID);
 
+	// Create OpenCL Context
 	cl_context_properties contextProperties[] = {
 		CL_CONTEXT_PLATFORM, (cl_context_properties)clPlatformID,
 		0 };
@@ -56,9 +56,9 @@ bool InitOpenCL() {
 		UninitOpenCL();
 		return false;
 	}
-	printf("OpenCL context created successfully...\n");
+	printf("OpenCL Context created successfully...\n");
 
-
+	// Create OpenCL Command Queue
 	clCommandQueue = clCreateCommandQueueWithProperties(clContext, clDeviceID, 0, &clResult);
 	if(clResult != CL_SUCCESS) {
 		printf("\nUnable to create Command Queue.\n");
@@ -70,11 +70,6 @@ bool InitOpenCL() {
 	return true;
 }
 
-/**
- * Get all supported OpenCL Platform(s) and
- * gives platform id in 'platformID'.
- * Returns CL_SUCCESS on sucess.
- */
 cl_int GetOpenCLPlatform(cl_platform_id *platformID) {
 	// Function declarations
 	void printOpenCLPlatformInfo(cl_platform_id);
@@ -117,9 +112,6 @@ cl_int GetOpenCLPlatform(cl_platform_id *platformID) {
 	return CL_SUCCESS;
 }
 
-/**
- * Print OpenCL platform related information.
- */
 void printOpenCLPlatformInfo(cl_platform_id platformID) {
 	// Variable declaration
 	size_t byteCount;
@@ -145,11 +137,6 @@ void printOpenCLPlatformInfo(cl_platform_id platformID) {
 	printf("\tOpenCL Version : %s\n", byteStream);
 }
 
-/**
- * Get supported OpenCL Device(s) and gives
- * number of supported devices in 'clDeviceCount'.
- * Returns CL_SUCCESS on sucess.
- */
 cl_int GetOpenCLDevice(cl_platform_id PlatformID, cl_device_id *deviceID) {
 	// Function declaration
 	void printOpenCLDeviceInfo(cl_device_id);
@@ -193,9 +180,6 @@ cl_int GetOpenCLDevice(cl_platform_id PlatformID, cl_device_id *deviceID) {
 	return CL_SUCCESS;
 }
 
-/**
- * Print OpenCL Device information.
- */
 void printOpenCLDeviceInfo(cl_device_id device) {
 	// Variable declaration
 	size_t byteCount;
@@ -227,9 +211,6 @@ void printOpenCLDeviceInfo(cl_device_id device) {
 	printf("\t\tDriver Version : %s\n", byteStream);
 }
 
-/**
- * Create OpenCL Kernel from 'filename'
- */
 cl_kernel *CreateOpenCLKernelFromFile(char *filename, const char *kernelName[], cl_uint kernelCount) {
 	// Variable declaration
 	cl_int clResult;
@@ -260,7 +241,7 @@ cl_kernel *CreateOpenCLKernelFromFile(char *filename, const char *kernelName[], 
 	kernelSourceCode = NULL;
 
 	// Build Program
-	clResult = clBuildProgram(clProgram, 1, clDeviceID, buildOptions, NULL, NULL);
+	clResult = clBuildProgram(clProgram, 1, &clDeviceID, buildOptions, NULL, NULL);
 	if(clResult != CL_SUCCESS) {
 		printf("Unable to build program. clBuildProgram() failed !!!\n");
 		size_t len;
@@ -293,45 +274,62 @@ cl_kernel *CreateOpenCLKernelFromFile(char *filename, const char *kernelName[], 
 	return clKernel;
 }
 
-/**
- * Set OpenCL kernel Arguments
- */
-bool SetOpenCLKernelArguments(cl_kernel kernel, KernelArgument *kernelArguments, int nkernelArguments) {
+bool SetOpenCLKernelArgumentWithDatablob(cl_kernel kernel, int argumentIndex, size_t dataSize, void *dataBlob, cl_mem *clMemory_write) {
 	// Variable declaration
 	cl_int clResult;
+	cl_mem_flags flags = CL_MEM_COPY_HOST_PTR;
 
 	// Code
-	for(int i = 0; i < nkernelArguments; i++) {
-		clResult = clSetKernelArg(kernel, i, kernelArguments[i].size, kernelArguments[i].arg);
-		if(clResult != CL_SUCCESS) {
-			printf("clSetKernelArg() failed for argument no. %d\n", i);
-			return false;
-		}
+	// Allocate memory for 'cl_mem' data
+	n_clMemory++;
+	clMemory = (cl_mem *)realloc(clMemory, sizeof(cl_mem) * n_clMemory);
+	if(clMemory == NULL) {
+		printf("Unable to allocate memory for data.\n");
+		UninitOpenCL();
+		return false;
 	}
+
+	// Create memory blob for 'dataBlob'
+	if(dataBlob == NULL)
+		flags = CL_MEM_HOST_READ_ONLY;
+	clMemory[n_clMemory - 1] = clCreateBuffer(clContext, flags, dataSize, dataBlob, &clResult);
+	if(clResult != CL_SUCCESS) {
+		printf("Unable to create buffer for argument %d. clCreateBuffer() failed !!!\n", argumentIndex);
+		UninitOpenCL();
+		return false;
+	}
+	if(dataBlob == NULL)
+		*clMemory_write = clMemory[n_clMemory - 1];
+
+	// Set Kernel Argument
+	clResult = clSetKernelArg(kernel, argumentIndex, sizeof(cl_mem), (void *)&clMemory[n_clMemory - 1]);
+	if(clResult != CL_SUCCESS) {
+		printf("clSetKernelArg() failed for argument no. %d\n", argumentIndex);
+		UninitOpenCL();
+		return false;
+	}
+
+	// Return 'true' on success
 	return true;
 }
 
-/**
- * Run OpenCL kernel 'kernel'
- */
-bool RunOpenCLKernel(cl_kernel kernel, cl_mem *memObjects, cl_uint memObjectCount, cl_uint dims, size_t *GlobalWorkSize, size_t *LocalWorkSize) {
+bool RunOpenCLKernel(cl_kernel kernel, int nArrayElements, cl_mem clMemory_write, size_t dataSize, void *dataPtr) {
 	// Variable declaration
 	cl_int clResult;
+	size_t localWorkSize = 1;
+	size_t globalWorkSize = nArrayElements;
 
 	// Code
-	clResult = clEnqueueAcquireGLObjects(clCommandQueue, memObjectCount, memObjects, 0, NULL, NULL);
-	if(clResult != CL_SUCCESS) {
-		printf("clEnqueueAcquireGLObjects() failed !!!\n");
-		return false;
-	}
-	clResult = clEnqueueNDRangeKernel(clCommandQueue, kernel, dims, NULL, GlobalWorkSize, LocalWorkSize, 0, NULL, NULL);
+	clResult = clEnqueueNDRangeKernel(clCommandQueue, kernel, 1, NULL, &globalWorkSize, &localWorkSize, 0, NULL, NULL);
 	if(clResult != CL_SUCCESS) {
 		printf("clEnqueueNDRangeKernel() failed !!!\n");
+		UninitOpenCL();
 		return false;
 	}
-	clResult = clEnqueueReleaseGLObjects(clCommandQueue, memObjectCount, memObjects, 0, NULL, NULL);
+	clEnqueueReadBuffer(clCommandQueue, clMemory_write, CL_TRUE, 0, dataSize, dataPtr, 0, NULL, NULL);
 	if(clResult != CL_SUCCESS) {
-		printf("clEnqueueReleaseGLObjects() failed !!!\n");
+		printf("Unable to read data from GPU back to CPU memory. clEnqueueReadBuffer() failed !!!\n");
+		UninitOpenCL();
 		return false;
 	}
 	clFinish(clCommandQueue);
@@ -339,11 +337,14 @@ bool RunOpenCLKernel(cl_kernel kernel, cl_mem *memObjects, cl_uint memObjectCoun
 	return true;
 }
 
-/**
- * Uninitialize OpenCL
- */
 void UninitOpenCL() {
 	// Code
+	for(int i = 0; i < n_clMemory; i++) {
+		if(clMemory[i])
+			clReleaseMemObject(clMemory[i]);
+	}
+	if(clMemory)
+		free(clMemory);
 	for(int i = 0; i < n_clKernels; i++) {
 		if(clKernel[i])
 			clReleaseKernel(clKernel[i]);
