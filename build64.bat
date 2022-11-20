@@ -29,7 +29,7 @@ main.exe
 
 @echo off
 	@REM Delete main file
-	del main.exe
+	@REM del main.exe
 
 	@REM Return to root directory
 	cd %rootPath%
