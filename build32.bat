@@ -5,31 +5,29 @@ cls
 	@REM Save root path for this project
 	set rootPath=%__CD__%
 
+	@REM Delete .exe file(s)
+	del "%rootPath%"bin\x86\*.exe
+
 	@REM Create intermediate folder for .obj files
 	mkdir interm
 	cd interm
 @echo on
-
 @REM Compile code and place in 'interm' folder
 cl /c /EHsc /I "%rootPath%include" "%rootPath%src\*.c"
 
-@REM Build program for 32 bit system
 @echo off
 	cd "%rootPath%bin\x86"
+	set commonFiles[0]="%rootPath%interm\DataIO.obj"
+	set commonFiles[1]="%rootPath%interm\FileHelper.obj"
+	set commonFiles[2]="%rootPath%interm\OpenCLHelper.obj"
+	set libs="%rootPath%lib\x86\OpenCL.lib"
 @echo on
-link /OUT:"main.exe" "%rootPath%lib\x86\OpenCL.lib" "%rootPath%interm\*.obj"
+link "%rootPath%interm\Add_iArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+link "%rootPath%interm\Add_iNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
 
-@REM Delete intermediate folder
 @echo off
+	@REM Delete intermediate folder
 	rmdir /s /q "%rootPath%interm"
-@echo on
-
-@REM Run main file
-main.exe
-
-@echo off
-	@REM Delete main file
-	@REM del main.exe
 
 	@REM Return to root directory
 	cd %rootPath%
