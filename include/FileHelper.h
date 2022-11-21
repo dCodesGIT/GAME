@@ -9,15 +9,22 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-// Function definitions
+// Function declarations
 /**
- * Reads contents from file 'filename'.
- * Returns stream of characters from file.
+ * @brief Reads contents from file 'filename'.
+ * 
+ * @param filename Name of file which is to be read.
+ * 
+ * @return Returns a stream of characters from file.
  */
 char *readFile(char *filename);
 
 /**
- * Writes stream of characters to file 'filename'.
- * Returns true if 'stream' is written successfully to file 'filename'.
+ * @brief Writes a stream of characters to file 'filename'.
+ * 
+ * @param filename	Name of file in which stream of bytes is to be written.
+ * @param stream	Stream of bytes(characters) to be written in file 'filename'.
+ * 
+ * @return Returns true if 'stream' is written successfully to file 'filename'.
  */
 bool writeFile(char *filename, char *stream);

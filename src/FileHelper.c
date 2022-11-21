@@ -7,11 +7,7 @@
 // Header files
 #include "../include/FileHelper.h"
 
-// Function declarations
-/**
- * Reads contents from file 'filename'.
- * Returns stream of characters from file.
- */
+// Function definitions
 char *readFile(char *filename) {
 	// Variable declarations
 	FILE *fp = NULL;
@@ -51,10 +47,6 @@ char *readFile(char *filename) {
 	return stream;
 }
 
-/**
- * Writes stream of characters to file 'filename'.
- * Returns true if 'stream' is written successfully to file 'filename'.
- */
 bool writeFile(char *filename, char *stream) {
 	// Variable declaration
 	FILE *fp = NULL;
