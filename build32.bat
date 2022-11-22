@@ -30,6 +30,14 @@ link "%rootPath%interm\Sub_iArray.obj" %commonFiles[0]% %commonFiles[1]% %common
 link "%rootPath%interm\Sub_iNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
 link "%rootPath%interm\Sub_fArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
 link "%rootPath%interm\Sub_fNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+link "%rootPath%interm\Mul_iArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+link "%rootPath%interm\Mul_iNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+link "%rootPath%interm\Mul_fArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+link "%rootPath%interm\Mul_fNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+link "%rootPath%interm\Div_iArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+link "%rootPath%interm\Div_iNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+link "%rootPath%interm\Div_fArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+link "%rootPath%interm\Div_fNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
 
 @echo off
 	@REM Delete intermediate folder

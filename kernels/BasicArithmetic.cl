@@ -47,7 +47,7 @@ __kernel void Add_fNumber(__global float *arraySum, __global float *array1, __gl
 
 // ****************************************************************************
 // Subtraction
-// Two arrays of integers
+// Array 2 of integer from array 1 of integer
 __kernel void Sub_iArray(__global int *arrayDiff, __global int *array1, __global int *array2) {
 	// Variable declaration
 	int i = get_global_id(0);
@@ -67,7 +67,7 @@ __kernel void Sub_iNumber(__global int *arrayDiff, __global int *array1, __globa
 	return;
 }
 
-// Two arrays of floats
+// Array 2 of float from array 1 of float
 __kernel void Sub_fArray(__global float *arrayDiff, __global float *array1, __global float *array2) {
 	// Variable declaration
 	int i = get_global_id(0);
@@ -84,5 +84,89 @@ __kernel void Sub_fNumber(__global float *arrayDiff, __global float *array1, __g
 
 	// Code
 	arrayDiff[i] = array1[i] - number[0];
+	return;
+}
+
+// ****************************************************************************
+// Multiplication
+// Two arrays of integers
+__kernel void Mul_iArray(__global int *arrayProd, __global int *array1, __global int *array2) {
+	// Variable declaration
+	int i = get_global_id(0);
+
+	// Code
+	arrayProd[i] = array1[i] * array2[i];
+	return;
+}
+
+// An integer to an array of integer
+__kernel void Mul_iNumber(__global int *arrayProd, __global int *array1, __global int *number) {
+	// Variable declaration
+	int i = get_global_id(0);
+
+	// Code
+	arrayProd[i] = array1[i] * number[0];
+	return;
+}
+
+// Two arrays of floats
+__kernel void Mul_fArray(__global float *arrayProd, __global float *array1, __global float *array2) {
+	// Variable declaration
+	int i = get_global_id(0);
+
+	// Code
+	arrayProd[i] = array1[i] * array2[i];
+	return;
+}
+
+// A float to an array of float
+__kernel void Mul_fNumber(__global float *arrayProd, __global float *array1, __global float *number) {
+	// Variable declaration
+	int i = get_global_id(0);
+
+	// Code
+	arrayProd[i] = array1[i] * number[0];
+	return;
+}
+
+// ****************************************************************************
+// Division
+// Array 2 of integer from array 1 of integer
+__kernel void Div_iArray(__global int *arrayQuotient, __global int *array1, __global int *array2) {
+	// Variable declaration
+	int i = get_global_id(0);
+
+	// Code
+	arrayQuotient[i] = array1[i] / array2[i];
+	return;
+}
+
+// An integer from an array of integer
+__kernel void Div_iNumber(__global int *arrayQuotient, __global int *array1, __global int *number) {
+	// Variable declaration
+	int i = get_global_id(0);
+
+	// Code
+	arrayQuotient[i] = array1[i] / number[0];
+	return;
+}
+
+// Array 2 of float from array 1 of float
+__kernel void Div_fArray(__global float *arrayQuotient, __global float *array1, __global float *array2) {
+	// Variable declaration
+	int i = get_global_id(0);
+
+	// Code
+	arrayQuotient[i] = array1[i] / array2[i];
+	return;
+}
+
+// A float from an array of float
+__kernel void Div_fNumber(__global float *arrayQuotient, __global float *array1, __global float *number) {
+	// Variable declaration
+	int i = get_global_id(0);
+
+	// Code
+	arrayQuotient[i] = array1[i] / number[0];
 	return;
 }
