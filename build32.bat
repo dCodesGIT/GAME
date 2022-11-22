@@ -26,6 +26,10 @@ link "%rootPath%interm\Add_iArray.obj" %commonFiles[0]% %commonFiles[1]% %common
 link "%rootPath%interm\Add_iNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
 link "%rootPath%interm\Add_fArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
 link "%rootPath%interm\Add_fNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+link "%rootPath%interm\Sub_iArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+link "%rootPath%interm\Sub_iNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+link "%rootPath%interm\Sub_fArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+link "%rootPath%interm\Sub_fNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
 
 @echo off
 	@REM Delete intermediate folder
