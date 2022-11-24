@@ -9,7 +9,7 @@
 #include <conio.h>
 #include <stdbool.h>
 #include <malloc.h>
-#include "../CL/cl.h"
+#include "CL/cl.h"
 #include "FileHelper.h"
 
 // Function declarations

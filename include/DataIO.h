@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "../CL/cl.h"
+#include "CL/cl.h"
 
 // Global macro definitions
 #define DEFAULT_OUT_FILE	"output.txt"

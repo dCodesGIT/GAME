@@ -42,7 +42,7 @@ bool InitOpenCL() {
 		return false;
 
 	system("cls");
-	printf("Selected Platform and device information : \n");
+	printf("\n Selected Platform and device information : ");
 	printOpenCLPlatformInfo(clPlatformID);
 	printOpenCLDeviceInfo(clDeviceID);
 
@@ -52,20 +52,20 @@ bool InitOpenCL() {
 		0 };
 	clContext = clCreateContext(contextProperties, 1, &clDeviceID, NULL, NULL, &clResult);
 	if(clResult != CL_SUCCESS) {
-		printf("\nUnable to create OpenCL context.\n");
+		printf("\n Unable to create OpenCL context.");
 		UninitOpenCL();
 		return false;
 	}
-	printf("OpenCL Context created successfully...\n");
+	printf("\n\n OpenCL Context created successfully...");
 
 	// Create OpenCL Command Queue
 	clCommandQueue = clCreateCommandQueueWithProperties(clContext, clDeviceID, 0, &clResult);
 	if(clResult != CL_SUCCESS) {
-		printf("\nUnable to create Command Queue.\n");
+		printf("\n Unable to create Command Queue.");
 		UninitOpenCL();
 		return false;
 	}
-	printf("OpenCL Command Queue created successfully...\n");
+	printf("\n OpenCL Command Queue created successfully...\n");
 
 	return true;
 }
@@ -84,7 +84,7 @@ cl_int GetOpenCLPlatform(cl_platform_id *platformID) {
 	// Get count of supported OpenCL platforms
 	clResult = clGetPlatformIDs(1, NULL, &PlatformCount);
 	if(clResult != CL_SUCCESS || PlatformCount == 0) {
-		printf("No OpenCL platform found !!!\n");
+		printf("\n No OpenCL platform found !!!");
 		return clResult;
 	}
 	platformIDs = (cl_platform_id *)alloca(sizeof(cl_platform_id) * PlatformCount);
@@ -92,19 +92,19 @@ cl_int GetOpenCLPlatform(cl_platform_id *platformID) {
 	// Get actual ids of supported OpenCL platforms
 	clResult = clGetPlatformIDs(PlatformCount, platformIDs, NULL);
 	if(clResult != CL_SUCCESS) {
-		printf("Unable to find OpenCL platform !!!\n");
+		printf("\n Unable to find OpenCL platform !!!");
 		return clResult;
 	}
-	printf("Found %d OpenCL supported platform(s).\n", (int)PlatformCount);
+	printf("\n Found %d OpenCL supported platform(s).", (int)PlatformCount);
 
 	// Print information of all supported OpenCL platforms
 	for(int i = 0; i < PlatformCount; i++) {
-		printf("Platform Number : %d\n", i);
+		printf("\n Platform Number : %d", i);
 		printOpenCLPlatformInfo(platformIDs[i]);
 	}
 
 	if(PlatformCount > 1) {
-		printf("Select OpenCL platform (Platform Number) : ");
+		printf("\n Select OpenCL platform (Platform Number) : ");
 		scanf("%d", &selectedPlatform);
 	}
 	*platformID = platformIDs[selectedPlatform];
@@ -122,19 +122,19 @@ void printOpenCLPlatformInfo(cl_platform_id platformID) {
 	clGetPlatformInfo(platformID, CL_PLATFORM_NAME, 0, NULL, &byteCount);
 	byteStream = (cl_char *) alloca(sizeof(cl_char) * byteCount);
 	clGetPlatformInfo(platformID, CL_PLATFORM_NAME, byteCount, byteStream, NULL);
-	printf("\tPlatform Name : %s\n", byteStream);
+	printf("\n\tPlatform Name : %s", byteStream);
 
 	// Platform Vendor
 	clGetPlatformInfo(platformID, CL_PLATFORM_VENDOR, 0, NULL, &byteCount);
 	byteStream = (cl_char *) alloca(sizeof(cl_char) * byteCount);
 	clGetPlatformInfo(platformID, CL_PLATFORM_VENDOR, byteCount, byteStream, NULL);
-	printf("\tPlatform Vendor : %s\n", byteStream);
+	printf("\n\tPlatform Vendor : %s", byteStream);
 
 	// Platform supported openCL version
 	clGetPlatformInfo(platformID, CL_PLATFORM_VERSION, 0, NULL, &byteCount);
 	byteStream = (cl_char *) alloca(sizeof(cl_char) * byteCount);
 	clGetPlatformInfo(platformID, CL_PLATFORM_VERSION, byteCount, byteStream, NULL);
-	printf("\tOpenCL Version : %s\n", byteStream);
+	printf("\n\tOpenCL Version : %s", byteStream);
 }
 
 cl_int GetOpenCLDevice(cl_platform_id PlatformID, cl_device_id *deviceID) {
@@ -150,7 +150,7 @@ cl_int GetOpenCLDevice(cl_platform_id PlatformID, cl_device_id *deviceID) {
 	// Get count of OpenCL supported devices on platform PlatformID
 	clResult = clGetDeviceIDs(PlatformID, CL_DEVICE_TYPE_GPU, 0, NULL, &deviceCount);
 	if(clResult != CL_SUCCESS || deviceCount == 0) {
-		printf("No supported devices on platform !!!\n");
+		printf("\n No supported devices on platform !!!");
 		UninitOpenCL();
 		return false;
 	}
@@ -159,20 +159,20 @@ cl_int GetOpenCLDevice(cl_platform_id PlatformID, cl_device_id *deviceID) {
 	// Get actual ids of OpenCL supported devices on platform PlatformID
 	clResult = clGetDeviceIDs(PlatformID, CL_DEVICE_TYPE_GPU, deviceCount, deviceIDs, NULL);
 	if(clResult != CL_SUCCESS) {
-		printf("No supported devices on platform !!!\n");
+		printf("\n No supported devices on platform !!!");
 		UninitOpenCL();
 		return false;
 	}
-	printf("\tFound %d OpenCL supporting device(s).\n", (int)deviceCount);
+	printf("\n\tFound %d OpenCL supporting device(s).", (int)deviceCount);
 
 	// Print information of all supported OpenCL Devices
 	for(int i = 0; i < deviceCount; i++) {
-		printf("\tDevice Number : %d\n", i);
+		printf("\n\tDevice Number : %d", i);
 		printOpenCLDeviceInfo(deviceIDs[i]);
 	}
 
 	if(deviceCount > 1) {
-		printf("Select OpenCL device for selected platform (Device Number) : ");
+		printf("\n Select OpenCL device for selected platform (Device Number) : ");
 		scanf("%d", &selectedDevice);
 	}
 	*deviceID = deviceIDs[selectedDevice];
@@ -190,25 +190,25 @@ void printOpenCLDeviceInfo(cl_device_id device) {
 	clGetDeviceInfo(device, CL_DEVICE_NAME, 0, NULL, &byteCount);
 	byteStream = (cl_char *)alloca(sizeof(cl_char) * byteCount);
 	clGetDeviceInfo(device, CL_DEVICE_NAME, byteCount, byteStream, NULL);
-	printf("\t\tDevice Name : %s\n", byteStream);
+	printf("\n\t\tDevice Name : %s", byteStream);
 
 	// Device Vendor
 	clGetDeviceInfo(device, CL_DEVICE_VENDOR, 0, NULL, &byteCount);
 	byteStream = (cl_char *)alloca(sizeof(cl_char) * byteCount);
 	clGetDeviceInfo(device, CL_DEVICE_VENDOR, byteCount, byteStream, NULL);
-	printf("\t\tDevice Vendor : %s\n", byteStream);
+	printf("\n\t\tDevice Vendor : %s", byteStream);
 
 	// Device Version
 	clGetDeviceInfo(device, CL_DEVICE_VERSION, 0, NULL, &byteCount);
 	byteStream = (cl_char *)alloca(sizeof(cl_char) * byteCount);
 	clGetDeviceInfo(device, CL_DEVICE_VERSION, byteCount, byteStream, NULL);
-	printf("\t\tDevice Version : %s\n", byteStream);
+	printf("\n\t\tDevice Version : %s", byteStream);
 
 	// Driver Version
 	clGetDeviceInfo(device, CL_DRIVER_VERSION, 0, NULL, &byteCount);
 	byteStream = (cl_char *)alloca(sizeof(cl_char) * byteCount);
 	clGetDeviceInfo(device, CL_DRIVER_VERSION, byteCount, byteStream, NULL);
-	printf("\t\tDriver Version : %s\n", byteStream);
+	printf("\n\t\tDriver Version : %s", byteStream);
 }
 
 cl_kernel *CreateOpenCLKernelFromFile(char *filename, const char *kernelName[], cl_uint kernelCount) {
@@ -219,11 +219,11 @@ cl_kernel *CreateOpenCLKernelFromFile(char *filename, const char *kernelName[], 
 	const char *buildOptions = "";
 
 	// Code
-	sprintf(kernelDirectory, "../../kernels/%s", filename);
+	sprintf(kernelDirectory, "../../../kernels/%s", filename);
 	// Read contents from file 'filename'
 	kernelSourceCode = readFile(kernelDirectory);
 	if(kernelSourceCode == NULL) {
-		printf("Failed to read file '%s'.\n", filename);
+		printf("\n Failed to read file '%s'.", filename);
 		UninitOpenCL();
 		return NULL;
 	}
@@ -231,7 +231,7 @@ cl_kernel *CreateOpenCLKernelFromFile(char *filename, const char *kernelName[], 
 	// Create program
 	clProgram = clCreateProgramWithSource(clContext, 1, &kernelSourceCode, NULL, &clResult);
 	if(clResult != CL_SUCCESS) {
-		printf("Unable to create program. clCreateProgramWithSource() failed !!!\n");
+		printf("\n Unable to create program. clCreateProgramWithSource() failed !!!");
 		UninitOpenCL();
 		return NULL;
 	}
@@ -243,13 +243,13 @@ cl_kernel *CreateOpenCLKernelFromFile(char *filename, const char *kernelName[], 
 	// Build Program
 	clResult = clBuildProgram(clProgram, 1, &clDeviceID, buildOptions, NULL, NULL);
 	if(clResult != CL_SUCCESS) {
-		printf("Unable to build program. clBuildProgram() failed !!!\n");
+		printf("\n Unable to build program. clBuildProgram() failed !!!");
 		size_t len;
 		char *errorBuf;
 		clGetProgramBuildInfo(clProgram, clDeviceID, CL_PROGRAM_BUILD_LOG, 0, NULL, &len);
 		errorBuf = (char*)alloca(len);
 		clGetProgramBuildInfo(clProgram, clDeviceID, CL_PROGRAM_BUILD_LOG, len, errorBuf, NULL);
-		printf("Build error : %s", errorBuf);
+		printf("\n Build error : %s", errorBuf);
 		UninitOpenCL();
 		return NULL;
 	}
@@ -257,17 +257,18 @@ cl_kernel *CreateOpenCLKernelFromFile(char *filename, const char *kernelName[], 
 	// Create Kernel(s)
 	clKernel = (cl_kernel *)malloc(sizeof(cl_kernel) * kernelCount);
 	if(clKernel == NULL) {
-		printf("Unable to allocate memory for kernel.\n");
+		printf("\n Unable to allocate memory for kernel.");
 		UninitOpenCL();
 		return NULL;
 	}
 	for(int i = 0; i < kernelCount; i++) {
 		clKernel[i] = clCreateKernel(clProgram, kernelName[i], &clResult);
 		if(clResult != CL_SUCCESS) {
-			printf("Unable to create kernel '%s'.\n", kernelName[i]);
+			printf("\n Unable to create kernel '%s'.", kernelName[i]);
 			UninitOpenCL();
 			return NULL;
 		}
+		printf("\n OpenCL kernel '%s' created successfully...", kernelName[i]);
 		n_clKernels++;
 	}
 
@@ -281,10 +282,9 @@ bool SetOpenCLKernelArgumentWithDatablob(cl_kernel kernel, int argumentIndex, si
 
 	// Code
 	// Allocate memory for 'cl_mem' data
-	n_clMemory++;
-	clMemory = (cl_mem *)realloc(clMemory, sizeof(cl_mem) * n_clMemory);
+	clMemory = (cl_mem *)realloc(clMemory, sizeof(cl_mem) * (n_clMemory + 1));
 	if(clMemory == NULL) {
-		printf("Unable to allocate memory for data.\n");
+		printf("\n Unable to allocate memory for data.");
 		UninitOpenCL();
 		return false;
 	}
@@ -292,22 +292,31 @@ bool SetOpenCLKernelArgumentWithDatablob(cl_kernel kernel, int argumentIndex, si
 	// Create memory blob for 'dataBlob'
 	if(dataBlob == NULL)
 		flags = CL_MEM_HOST_READ_ONLY;
-	clMemory[n_clMemory - 1] = clCreateBuffer(clContext, flags, dataSize, dataBlob, &clResult);
+	clMemory[n_clMemory] = clCreateBuffer(clContext, flags, dataSize, dataBlob, &clResult);
 	if(clResult != CL_SUCCESS) {
-		printf("Unable to create buffer for argument %d. clCreateBuffer() failed !!!\n", argumentIndex);
+		printf("\n Unable to create buffer for argument %d. clCreateBuffer() failed !!!", argumentIndex);
 		UninitOpenCL();
 		return false;
 	}
 	if(dataBlob == NULL)
-		*clMemory_write = clMemory[n_clMemory - 1];
+		*clMemory_write = clMemory[n_clMemory];
 
 	// Set Kernel Argument
-	clResult = clSetKernelArg(kernel, argumentIndex, sizeof(cl_mem), (void *)&clMemory[n_clMemory - 1]);
+	clResult = clSetKernelArg(kernel, argumentIndex, sizeof(cl_mem), (void *)&clMemory[n_clMemory]);
 	if(clResult != CL_SUCCESS) {
-		printf("clSetKernelArg() failed for argument no. %d\n", argumentIndex);
+		printf("\n clSetKernelArg() failed for argument no. %d", argumentIndex);
 		UninitOpenCL();
 		return false;
 	}
+
+	int strLen = 0;
+	clGetKernelInfo(kernel, CL_KERNEL_FUNCTION_NAME, 0, NULL, &strLen);
+	char *kernelName = (char *)alloca(sizeof(char) * strLen);
+	clGetKernelInfo(kernel, CL_KERNEL_FUNCTION_NAME, strLen, kernelName, NULL);
+	printf("\n Argument index %d of kernel '%s' set successfully...", argumentIndex, kernelName);
+
+	// Finally increment global count of 'clMem' objects
+	n_clMemory++;
 
 	// Return 'true' on success
 	return true;
@@ -322,17 +331,23 @@ bool RunOpenCLKernel(cl_kernel kernel, int nArrayElements, cl_mem clMemory_write
 	// Code
 	clResult = clEnqueueNDRangeKernel(clCommandQueue, kernel, 1, NULL, &globalWorkSize, &localWorkSize, 0, NULL, NULL);
 	if(clResult != CL_SUCCESS) {
-		printf("clEnqueueNDRangeKernel() failed !!!\n");
+		printf("\n clEnqueueNDRangeKernel() failed !!!");
 		UninitOpenCL();
 		return false;
 	}
 	clEnqueueReadBuffer(clCommandQueue, clMemory_write, CL_TRUE, 0, dataSize, dataPtr, 0, NULL, NULL);
 	if(clResult != CL_SUCCESS) {
-		printf("Unable to read data from GPU back to CPU memory. clEnqueueReadBuffer() failed !!!\n");
+		printf("\n Unable to read data from GPU back to CPU memory. clEnqueueReadBuffer() failed !!!");
 		UninitOpenCL();
 		return false;
 	}
 	clFinish(clCommandQueue);
+
+	int strLen = 0;
+	clGetKernelInfo(kernel, CL_KERNEL_FUNCTION_NAME, 0, NULL, &strLen);
+	char *kernelName = (char *)alloca(sizeof(char) * strLen);
+	clGetKernelInfo(kernel, CL_KERNEL_FUNCTION_NAME, strLen, kernelName, NULL);
+	printf("\n OpenCL kernel '%s' ran successfully...", kernelName);
 
 	return true;
 }
@@ -359,4 +374,5 @@ void UninitOpenCL() {
 		clReleaseContext(clContext);
 	if(clDeviceID)
 		clReleaseDevice(clDeviceID);
+	printf("\n\n OpenCL uninitialization done successfully...\n");
 }

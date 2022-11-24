@@ -18,7 +18,7 @@ cl_int *GetIntFromFile(char *filename, int *elementCount) {
 	// Open file for reading
 	fp = fopen(filename, "r");
 	if(fp == NULL) {
-		printf("Unable to open file '%s'", filename);
+		printf("\n Unable to open file '%s'", filename);
 		exit(EXIT_FAILURE);
 	}
 
@@ -35,6 +35,8 @@ cl_int *GetIntFromFile(char *filename, int *elementCount) {
 	// Close file once done reading
 	fclose(fp);
 	fp = NULL;
+
+	printf("\n File '%s' read successfully...", filename);
 
 	return data;
 }
@@ -56,6 +58,8 @@ bool StoreIntInFile(char *filename, int elementCount, cl_int *data) {
 	// Close file
 	fclose(fp);
 	fp = NULL;
+
+	printf("\n Data saved in file '%s' successfully...", filename);
 
 	return true;
 }
@@ -87,6 +91,8 @@ cl_float *GetFloatFromFile(char *filename, int *elementCount) {
 	fclose(fp);
 	fp = NULL;
 
+	printf("\n File '%s' read successfully...", filename);
+
 	return data;
 }
 
@@ -107,6 +113,8 @@ bool StoreFloatInFile(char *filename, int elementCount, cl_float *data) {
 	// Close file
 	fclose(fp);
 	fp = NULL;
+
+	printf("\n Data saved in file '%s' successfully...", filename);
 
 	return true;
 }

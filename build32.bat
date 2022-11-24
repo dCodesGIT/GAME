@@ -7,6 +7,7 @@ cls
 
 	@REM Delete .exe file(s)
 	del "%rootPath%"bin\x86\*.exe
+	del "%rootPath%"bin\x86\BasicArithmetic\*.exe
 
 	@REM Create intermediate folder for .obj files
 	mkdir interm
@@ -14,6 +15,7 @@ cls
 @echo on
 @REM Compile code and place in 'interm' folder
 cl /c /EHsc /I "%rootPath%include" "%rootPath%src\*.c"
+cl /c /EHsc /I "%rootPath%include" "%rootPath%src\BasicArithmetic\*.c"
 
 @echo off
 	cd "%rootPath%bin\x86"
@@ -22,22 +24,31 @@ cl /c /EHsc /I "%rootPath%include" "%rootPath%src\*.c"
 	set commonFiles[2]="%rootPath%interm\OpenCLHelper.obj"
 	set libs="%rootPath%lib\x86\OpenCL.lib"
 @echo on
-link "%rootPath%interm\Add_iArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
-link "%rootPath%interm\Add_iNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
-link "%rootPath%interm\Add_fArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
-link "%rootPath%interm\Add_fNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
-link "%rootPath%interm\Sub_iArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
-link "%rootPath%interm\Sub_iNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
-link "%rootPath%interm\Sub_fArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
-link "%rootPath%interm\Sub_fNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
-link "%rootPath%interm\Mul_iArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
-link "%rootPath%interm\Mul_iNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
-link "%rootPath%interm\Mul_fArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
-link "%rootPath%interm\Mul_fNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
-link "%rootPath%interm\Div_iArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
-link "%rootPath%interm\Div_iNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
-link "%rootPath%interm\Div_fArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
-link "%rootPath%interm\Div_fNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+
+@REM For Basic Arithmetic Operations
+@echo off
+	if exist BasicArithmetic\ ( mkdir BasicArithmetic )
+	cd BasicArithmetic
+
+	link "%rootPath%interm\Add_iArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\Add_iNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\Add_fArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\Add_fNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\Sub_iArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\Sub_iNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\Sub_fArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\Sub_fNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\Mul_iArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\Mul_iNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\Mul_fArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\Mul_fNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\Div_iArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\Div_iNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\Div_fArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\Div_fNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+
+	echo BasicArithmetic built successfully...
+@echo on
 
 @echo off
 	@REM Delete intermediate folder
