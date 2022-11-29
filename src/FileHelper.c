@@ -60,7 +60,7 @@ bool writeFile(char *filename, char *stream) {
 	}
 
 	// Write in file 'filename'
-	fprintf(fp, "%s\n", stream);
+	fprintf(fp, "%s", stream);
 
 	// Close file once writing done in file
 	fclose(fp);

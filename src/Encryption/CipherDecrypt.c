@@ -26,7 +26,7 @@ void main(int argc, char *argv[]) {
 
 	// Select array of less size
 	cl_char *decryptedData = data;
-	int nDecryptedData = nData - 1;
+	int nDecryptedData = nData;
 
 	// OpenCL
 	InitOpenCL();

@@ -26,7 +26,7 @@ void main(int argc, char *argv[]) {
 
 	// Select array of less size
 	cl_char *encryptedData = data;
-	int nEncryptedData = nData - 1;
+	int nEncryptedData = nData;
 
 	// OpenCL
 	InitOpenCL();
@@ -39,10 +39,8 @@ void main(int argc, char *argv[]) {
 	SetOpenCLKernelArgumentWithDatablob(clKernel[0], 1, sizeof(cl_char) * nData, data, NULL);
 	SetOpenCLKernelArgumentWithDatablob(clKernel[0], 2, sizeof(cl_char) * nCipher, cipher, NULL);
 	SetOpenCLKernelArgumentWithDatablob(clKernel[0], 3, sizeof(cl_int) * 1, &nCipher, NULL);
-printf("\n%d\n%s", nData, data);
 	RunOpenCLKernel(clKernel[0], nEncryptedData, clMemory, sizeof(cl_char) * nEncryptedData, encryptedData);
 	UninitOpenCL();
-printf("%s", encryptedData);
 
 	writeFile("CipherEncrypt_out.txt", encryptedData);
 

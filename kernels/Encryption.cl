@@ -11,7 +11,9 @@ __kernel void CipherEncrypt(__global char *encrypted, __global char *data, __glo
 	int cipherLen = nCipher[0];
 
 	// Code
-	encrypted[i] = data[i] + cipher[i % cipherLen];
+	encrypted[i] = data[i] + cipher[i % cipherLen] + (i / cipherLen);
+
+	return;
 }
 
 __kernel void CipherDecrypt(__global char *decrypted, __global char *data, __global char *cipher, __global int *nCipher) {
@@ -20,5 +22,7 @@ __kernel void CipherDecrypt(__global char *decrypted, __global char *data, __glo
 	int cipherLen = nCipher[0];
 
 	// Code
-	decrypted[i] = data[i] - cipher[i % cipherLen];
+	decrypted[i] = data[i] - cipher[i % cipherLen] - (i / cipherLen);
+
+	return;
 }
