@@ -8,6 +8,7 @@ cls
 	@REM Delete .exe file(s)
 	del "%rootPath%"bin\x86\*.exe
 	del "%rootPath%"bin\x86\BasicArithmetic\*.exe
+	del "%rootPath%"bin\x86\Encryption\*.exe
 
 	@REM Create intermediate folder for .obj files
 	mkdir interm
@@ -16,6 +17,7 @@ cls
 @REM Compile code and place in 'interm' folder
 cl /c /EHsc /I "%rootPath%include" "%rootPath%src\*.c"
 cl /c /EHsc /I "%rootPath%include" "%rootPath%src\BasicArithmetic\*.c"
+cl /c /EHsc /I "%rootPath%include" "%rootPath%src\Encryption\*.c"
 
 @echo off
 	cd "%rootPath%bin\x86"
@@ -27,7 +29,7 @@ cl /c /EHsc /I "%rootPath%include" "%rootPath%src\BasicArithmetic\*.c"
 
 @REM For Basic Arithmetic Operations
 @echo off
-	if exist BasicArithmetic\ ( mkdir BasicArithmetic )
+	if not exist BasicArithmetic\ ( mkdir BasicArithmetic )
 	cd BasicArithmetic
 
 	link "%rootPath%interm\Add_iArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
@@ -47,7 +49,20 @@ cl /c /EHsc /I "%rootPath%include" "%rootPath%src\BasicArithmetic\*.c"
 	link "%rootPath%interm\Div_fArray.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
 	link "%rootPath%interm\Div_fNumber.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
 
-	echo BasicArithmetic built successfully...
+	echo 'BasicArithmetic' built successfully...
+	cd ..
+@echo on
+
+@REM For Encryption
+@echo off
+	if not exist Encryption\ ( mkdir Encryption )
+	cd Encryption
+
+	link "%rootPath%interm\CipherEncrypt.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+	link "%rootPath%interm\CipherDecrypt.obj" %commonFiles[0]% %commonFiles[1]% %commonFiles[2]% %libs%
+
+	echo 'Encryption' built successfully...
+	cd ..
 @echo on
 
 @echo off
