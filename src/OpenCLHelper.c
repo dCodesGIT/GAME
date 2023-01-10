@@ -310,7 +310,7 @@ bool SetOpenCLKernelArgumentWithDatablob(cl_kernel kernel, int argumentIndex, si
 	}
 
 	int strLen = 0;
-	clGetKernelInfo(kernel, CL_KERNEL_FUNCTION_NAME, 0, NULL, &strLen);
+	clGetKernelInfo(kernel, CL_KERNEL_FUNCTION_NAME, 0, NULL, (size_t *)&strLen);
 	char *kernelName = (char *)alloca(sizeof(char) * strLen);
 	clGetKernelInfo(kernel, CL_KERNEL_FUNCTION_NAME, strLen, kernelName, NULL);
 	printf("\n Argument index %d of kernel '%s' set successfully...", argumentIndex, kernelName);
@@ -344,7 +344,7 @@ bool RunOpenCLKernel(cl_kernel kernel, int nArrayElements, cl_mem clMemory_write
 	clFinish(clCommandQueue);
 
 	int strLen = 0;
-	clGetKernelInfo(kernel, CL_KERNEL_FUNCTION_NAME, 0, NULL, &strLen);
+	clGetKernelInfo(kernel, CL_KERNEL_FUNCTION_NAME, 0, NULL, (size_t *)&strLen);
 	char *kernelName = (char *)alloca(sizeof(char) * strLen);
 	clGetKernelInfo(kernel, CL_KERNEL_FUNCTION_NAME, strLen, kernelName, NULL);
 	printf("\n OpenCL kernel '%s' ran successfully...", kernelName);
